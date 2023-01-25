@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+      .bar {
+        fill: salmon;
+      }
+      .bar:hover {
+        fill: midnightblue;
+      }
+      .axis {
+        font: 9px sans-serif;
+      }
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      .x.axis path {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+
+    
+    <hr>
+    <br>
+
+
+
+    <script>
+      // Load the data from the JSON file
+      d3.json("data.json").then(function(data) {
+
+        // Count the number of women orchestra chefs per country
+
+        var counts = {};
+        var threshold = 50; //set threshold value
+        for (var country in data) {
+            if(data[country].length >= threshold) {
+                counts[country] = data[country].length;
+        }}
+
+        // Set the dimensions of the chart
+        var margin = { top: 30, right: 30, bottom: 180, left: 60 },
+          width = 800 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+        // Set the scales for the x and y axes
+        var x = d3.scaleBand()
+          .rangeRound([0, width])
+          .padding(0.1);
+        var y = d3.scaleLinear()
+          .rangeRound([height, 0]);
+
+        // Create the x and y axes
+        var xAxis = d3.axisBottom(x);
+        var yAxis = d3.axisLeft(y);
+
+        // Create the SVG element
+        var svg = d3.select("body").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Set the domains for the x and y scales
+        x.domain(Object.keys(counts));
+        y.domain([0, d3.max(Object.values(counts))]);
+
+        // Add the x axis to the SVG element
+        svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis)
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-65)");
+
+        // Add the y axis to the SVG element
+        svg.append("g")
+          .attr("class", "yaxis")
+          .call(yAxis);
+
+        // Add the bars to the SVG element
+        svg.selectAll(".bar")
+          .data(Object.entries(counts))
+          .enter().append("rect")
+          .attr("class", "bar")
+          .attr("x", function(d) { return x(d[0]); })
+          .attr("y", function(d) { return y(d[1]); })
+          .attr("width", x.bandwidth())
+          .attr("height", function(d) { return height - y(d[1]); });
+      });
+    </script>
+  </body>
+</html>
