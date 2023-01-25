@@ -1,5 +1,6 @@
-### Hi there 👋
+### Datasoundation EPDS course project
 
+This project was made by Deniz Tural and Umut Kucuk as the final project of the Electronic Publishing and Digital Storytelling course taught by Professor Marilena Daquino at the University of Bologna.
 <!--
 **datasoundation/datasoundation** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
